@@ -97,10 +97,36 @@ LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<User>
     .select(User::getId,User::getUsername,User::getInfo,User::getBanlance)
     .like(User::getUserName,"o")
     .ge(User::getBalance,1000)
-
-
-
-
-
 ```
 ![](/assets/2026-5-16.png)
+### 自定义SQL
+注:这种架构模式的合理性有点商榷
+为了解决:
+* mybatis-plu更擅长where条件的构建 属于是半自动的 其他的得自己写
+* sql不建议写在service层代码当中  
+根据idList扣钱业务:  
+Service
+```java
+//参数
+int deAddMoney = 100 ;
+List<long> idList = List.of(1,2,3);
+//拼接条件
+LambdaQueryWrapper<User> wrapper = new LambdaQueryWarpper()
+    .in(User::getId,idList)
+//调用方法(这个方法不是mp提供的 是自己定义的)
+userMapper.deAddMoneyByIdList(wrapper,deAddMoney)
+```
+Mapper
+```java
+void deAddMoneyByIdList(
+    @Param("ew") LambdaQueryWrapper<User> wrapper,  //ew必须写死
+    @Param("deAddMoney") int deAddMoney
+)
+```
+Mapper(.xml)
+```xml
+<update id="deAddMoneyByIdList">
+    UPDATE user set balance = balance - #{ deAddMoney } ${ew.customSqlSegment}
+</update>
+```
+

@@ -129,4 +129,11 @@ Mapper(.xml)
     UPDATE user set balance = balance - #{ deAddMoney } ${ew.customSqlSegment}
 </update>
 ```
+### IService
+Service也不写了直接接口继承IService 接口的实现类继承ServiceImpl
+![](/assets/2026-5-18.png)
+```java
+public interface UserService extends ISevice<User>{}
 
+public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements UserService{}
+```

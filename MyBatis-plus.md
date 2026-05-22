@@ -131,3 +131,10 @@ Mapper(.xml)
 ```
 ### IService
 * Service也可以搞 
+Service也不写了直接接口继承IService 接口的实现类继承ServiceImpl
+![](/assets/2026-5-18.png)
+```java
+public interface UserService extends ISevice<User>{}
+
+public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements UserService{}
+```

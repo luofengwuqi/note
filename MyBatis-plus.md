@@ -129,4 +129,5 @@ Mapper(.xml)
     UPDATE user set balance = balance - #{ deAddMoney } ${ew.customSqlSegment}
 </update>
 ```
-
+### IService
+* Service也可以搞 

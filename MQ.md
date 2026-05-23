@@ -33,7 +33,7 @@ spring:
     username: hmall # 用户名
     password: 123 # 密码
 ```
-3.代码
+3.代码(比较简单的模拟 省略了交换机)
 ```java
 public class provider{
     @Autowired
@@ -55,3 +55,5 @@ public class consumer{
     }
 }
 ```
+## Work Queues
+任务模型 多个消费者绑定到一个Queue队列

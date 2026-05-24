@@ -63,13 +63,12 @@ spring:
         prefetch: 1 # 每次只能获取一条消息，处理完成才能获取下一个消息
 ```
 这样就可以实现能者多劳
-3.代码(比较简单的模拟 省略了交换机)
+3.代码
 ```java
+//生产者(一般写在Service里)
 public class provider{
     @Autowired
     private RabbitTemplate rabbitTemplate;
-
-
 
     public void main(){
         String exchangeName = "wuqi.fanout";
@@ -84,7 +83,8 @@ public class provider{
         rabbitTemplate.convertAndSend(exchangeName,routingKey,message);
     }
 }
-
+//消费者
+//规范:controller同级目录:listener/PaymentListener.java
 @Component
 public class consumer{
     //指定监听哪个队列
@@ -133,6 +133,7 @@ public Binding bindingQueue1(Queue fanoutQueue1, FanoutExchange fanoutExchange){
 ```
 ### 用注解声明
 ```java
+//写在消费者上面
 @RabbitListener(bindings = @QueueBinding(
     value = @Queue(name = "direct.queue1"),
     exchange = @Exchange(name = "itcast.direct", type = ExchangeTypes.DIRECT),
@@ -155,6 +156,7 @@ msg不一定是String还可能是别的对象
 ```
 在 publisher 和 consumer 中都要配置 MessageConverter：
 ```java
+//写在config配置类  
 @Bean
 public MessageConverter messageConverter(){
     return new Jackson2JsonMessageConverter();

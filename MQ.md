@@ -1,4 +1,4 @@
-# Rabbit MQ
+# Rabbit MQ基础
 ## 安装
 教程:https://blog.csdn.net/weixin_66401877/article/details/152948581  
 前置命令:rabbitmq-plugins enable rabbitmq_management  
@@ -162,3 +162,7 @@ public MessageConverter messageConverter(){
     return new Jackson2JsonMessageConverter();
 }
 ```
+最后附上一张业务图  
+![](/assets/2026-5-24-1.png)
+# RabbitMQ 高级
+### 可靠性

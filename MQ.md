@@ -142,4 +142,21 @@ public void listenDirectQueue1(String msg){
     System.out.println("消费者1接收到Direct消息：【"+msg+"】 ");
 }
 ```
+### 消息转换器
+msg不一定是String还可能是别的对象  
 
+建议采用 JSON 序列化代替默认的 JDK 序列化，要做两件事情：
+在 publisher 和 consumer 中都要引入 jackson 依赖：
+```xml
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+</dependency>
+```
+在 publisher 和 consumer 中都要配置 MessageConverter：
+```java
+@Bean
+public MessageConverter messageConverter(){
+    return new Jackson2JsonMessageConverter();
+}
+```

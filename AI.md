@@ -44,7 +44,33 @@ C:\Users\你的用户名\.config\opencode\skills
 ## opencode
 ### 常用命令
 ```
+/connent 连接大模型
 /models 选择大模型
 /skills 选择特技
 exit 退出
+```
+### 创建agent
+在 opencode.json(c) 配置文件中配置代理
+```jsonc
+{
+  "$schema": "https://opencode.ai/config.json",
+  "agent": {
+    "build": {
+      //两个选项: primary, subagent 前者可以和用户直接交互 后者只能只能被前者调用
+      "mode": "primary",
+      //指定模型
+      "model": "deepseek/deepseek-v4-flash",
+      //角色
+      "prompt": "你是专业的代码构建助手，负责生成、编写、修改代码，遵循最佳实践",
+      //温度:选填 0-1 0.1-0.2严谨 0.3-0.5标准 0.6-1创造力
+      "temperature": 0.7,
+      "tools": {
+        "write": true,//写权限
+        "edit": true,//
+        "bash": true
+      }
+    },
+    //在这里写新的agent
+  }
+}
 ```

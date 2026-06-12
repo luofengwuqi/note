@@ -165,4 +165,59 @@ public MessageConverter messageConverter(){
 最后附上一张业务图  
 ![](/assets/2026-5-24-1.png)
 # RabbitMQ 高级
-### 可靠性
+### 发送者可靠性
+1. 连接问题
+如果连接不上(网络波动) 可以通过配置来尝试重连
+```yml
+spring:
+  rabbitmq:
+    connection-timeout: 1s # 设置MQ的连接超时时间
+    template:
+      retry:
+        enabled: true # 开启超时重试机制
+        initial-interval: 1000ms # 失败后的初始等待时间
+        multiplier: 1 # 失败后下次的等待时长倍数, 下次等待时长 = initial-interval * multiplier
+        max-attempts: 3 # 最大重试次数
+```
+注意: 这是阻塞式的连接重试 会影响并发性能  
+2. 发送者确认  
+SpringAMQP提供了`Publisher Confirm`和`Publisher Return`两种确认机制。开启确认机制后，当发送者发送消息给MQ后，MQ会返回确认结果给发送者。返回的结果有以下几种情况：  
+
+- 消息投递到了MQ，但是路由失败。此时会通过`PublisherReturn`返回路由异常原因，然后返回**ACK**，告知投递成功
+- 临时消息投递到了MQ，并且入队成功，返回**ACK**，告知投递成功
+- 持久消息投递到了MQ，并且入队完成持久化，返回**ACK**，告知投递成功
+- 其它情况都会返回**NACK**，告知投递失败  
+开启:
+```yml
+spring:
+  rabbitmq:
+    # 开启publisher confirm机制，并设置confirm类型
+    # 可选值：none(关闭) / simple(开启并同步阻塞) / correlated(开启并异步)
+    publisher-confirm-type: correlated
+    # 开启publisher return机制
+    publisher-returns: true
+```
+接受:
+```java
+@Slf4j
+@AllArgsConstructor
+@Configuration
+public class MqConfig {
+    private final RabbitTemplate rabbitTemplate;
+
+    @PostConstruct
+    public void init(){
+        rabbitTemplate.setReturnsCallback(new RabbitTemplate.ReturnsCallback() {
+            @Override
+            public void returnedMessage(ReturnedMessage returned) {
+                log.error("触发return callback,");
+                log.debug("exchange: {}", returned.getExchange());
+                log.debug("routingKey: {}", returned.getRoutingKey());
+                log.debug("message: {}", returned.getMessage());
+                log.debug("replyCode: {}", returned.getReplyCode());
+                log.debug("replyText: {}", returned.getReplyText());
+            }
+        });
+    }
+}
+```

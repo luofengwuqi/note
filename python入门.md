@@ -17,6 +17,20 @@ print(type(num)) # <class 'int'>
 print(isinstance(num,int)) # True
 ```
 尽管python允许混合数据类型，但是不建议
+### 类型注解
+```py
+# 定义变量
+a: int = 695
+score: float = 98.5
+hobby: str = "Python"
+flag: bool = True
+pic: None = None
+
+names: list[str] = ["A", "C", "E"]
+phones: set[str] = {"13309091111", "15209109121"}
+options: dict[str, int] = {"count": 0, "total": 0}
+goods: tuple[str, int, int] = ("手机", 5999, 1)
+```
 ### list列表
 * 基础
 ```py
@@ -227,7 +241,24 @@ for i in str :
 else :
     print("循环结束")
 ```
-## 常用函数
+## 函数
+### 定义
+```py
+# 说明文档 悬浮的时候或者用help查看
+def getSum(a,b):
+  """
+    :param a: 第一个加数
+    :param b: 第二个加数
+    :return: a+b
+  """
+  return a+b
+help(getSum) # 获取说明文档
+
+# 类型注解
+def getSum(a: int, b: int) -> int
+    return a+b
+```
+### 常用函数
 * range
 ```py
 # 1-100所有偶数
@@ -239,4 +270,61 @@ for num in range(0,101,2):
 ```py
 list = [1 ,2 ,3]
 sum(list)
+```
+## 模块
+| 导入形式                     | 代码样例                          | 调用方式     | 调用示例               |
+| ---------------------------- | --------------------------------- | ------------ | ---------------------- |
+| import 模块名                | import random, os                 | 模块名.功能名 | random.randint(10, 100) |
+| import 模块名 as 别名        | import random as rd               | 别名.功能名   | rd.randint(10, 100)    |
+| from 模块名 import 功能名    | from random import randint,choice  | 功能名       | randint(10, 100)       |
+| from 模块名 import 功能名 as 别名 | from random import randint as rint | 别名 | rint(10, 100) |
+| from 模块名 import *         | from random import *              | 功能名       | randint(10, 100)       |
+### 包
+1. 什么是包？有什么作用？
+- 包就是一个文件夹，里面可以存储很多Python模块（py文件），通过包可以对模块进行归类
+
+2. `__init__.py` 文件的作用？
+- 标识这是一个包，而不是普通的文件夹
+- 控制在 `import *` 时导入的模块列表（`__all__` 变量）
+
+3. 导入包的方式？
+- `import 包名.模块名`
+- `from 包名 import 模块名`
+- `from 包名 import *`
+- `from 包名.模块名 import 功能名`
+- `from 包名.模块名 import *`
+### 类
+```py
+class Car:
+    # 构造函数 self表示当前实例
+    def __init__(self, c_brand, c_name, c_price):
+        self.brand = c_brand
+        self.name = c_name
+        self.price = c_price
+    # 成员方法
+    def run(self):
+        print(f"{self.name} is running...")
+    # 魔法方法
+    def __str__(self):
+        #在print(car)时候自动调用
+        return f"{self.brand},{self.name},{self.price}"
+    def __eq__(self,othor):
+        #在if(car1==car2时候自动调用)
+        return True
+    #还有__lt__ __le__ ...
+# 创建对象
+c1 = Car("BMW", "X5", 500000)
+print(c1.__dict__) #以字典的形式打印类所有的属性
+c1.run
+```
+## 异常
+```py
+try:
+    print("================")
+    print(my_name)
+    print("================")
+except NameError as e:
+    print("程序运行报错，错误信息：", e)
+finally:
+    print("释放资源 ~")
 ```

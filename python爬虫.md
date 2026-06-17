@@ -49,3 +49,30 @@ for tr in tr_list:
 | `*`                | 匹配任何元素节点                   | `//body/div/*`        |
 | `@*`               | 匹配元素的任何属性                 | `//body/div/a/@*`     |
 | `text()`           | 获取文本内容                       | `//div/p/text()`      |
+## csv
+Comma-separated values逗号分割值 例如:
+```
+姓名,性别,年龄
+芜柒,女,18
+```
+可以直接在excel打开
+* 注意编码
+```bash
+chcp # 查看系统默认编码(返回一个数字 数字可能代表GBK编码)
+```
+在保存文件时注意使用ANSI(系统默认编码)
+
+```py
+import csv
+# 写
+with open("resources/02.csv", "w", encoding="utf-8", newline="") as f:
+    writer = csv.DictWriter(f, fieldnames=["姓名", "年龄", "性别", "爱好"])
+    writer.writeheader()
+    writer.writerow({"姓名": "王林", "年龄": 29, "性别": "男", "爱好": "Python,Java"})
+    writer.writerow({"姓名": "红蝶", "年龄": 18, "性别": "女", "爱好": "Java"})
+# 读
+with open("csv_data/02.csv", "r", encoding="utf-8") as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        print(row)
+```

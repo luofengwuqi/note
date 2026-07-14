@@ -40,6 +40,14 @@ void Start(){
     Debug.Log(log);
 }
 ```
+## 字段权限
+* public: 公有 可以在unity编辑器中查看 其他类可以修改  
+* private: 私有 仅在当前类中查看 其他类不可以修改  
+
+如果想要用private 又允许在unity编辑器中查看 
+```C#
+[SerializeField] private float jumpForce;
+```
 ## 刚体运动
 Rigidbody2D:2D刚体
 BoxCollider2D:2D方块碰撞器
@@ -67,6 +75,7 @@ public class Move : MonoBehaviour
     }
 
     void MoveFun(){
+     //velocity:速度
      if(Input.GetKey(KeyCode.A)){
           rigidbody2D.velocity = new Vector2(-speed,rigidbody2D.velocity.y);
      }
@@ -84,5 +93,12 @@ public class Move : MonoBehaviour
           rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x,jumpForce);
      }
     }
+}
+```
+另一种写法(适配性更强)
+```C#
+void MoveFun(){
+     xInput = Input.GetAxisRaw("Horizontal");//unity内置的输入 获取水平输入 -1 0 1
+     rigidbody2D.velocity = new Vector2(xInput * speed,rigidbody2D.velocity.y);
 }
 ```

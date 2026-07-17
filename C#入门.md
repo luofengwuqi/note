@@ -102,3 +102,7 @@ void MoveFun(){
      rigidbody2D.velocity = new Vector2(xInput * speed,rigidbody2D.velocity.y);
 }
 ```
+
+## animator动画
+1. window -> animation -> animator
+2. project -> creat -> animator controller

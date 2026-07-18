@@ -104,5 +104,87 @@ void MoveFun(){
 ```
 
 ## animator动画
-1. window -> animation -> animator
+1. window -> animation(具体的动画) + animator(动画的控制器)
+![](./assets/2026-7-18.png)
 2. project -> creat -> animator controller
+![](./assets/2026-7-18-2.png)  
+
+代码注意  
+GetComponentInChildren  
+animator.SetBool("isMoving",isMoving);  
+```C#
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Move : MonoBehaviour
+{
+     [SerializeField] private float speed = 10f;//移动速度
+     [SerializeField] private float jumpForce = 20f;//跳跃强度
+     [SerializeField] private float xInput;
+
+     [SerializeField] private Animator animator;
+     [SerializeField] private bool isMoving = false;
+     [SerializeField] private bool isSleeping = false;
+
+     Rigidbody2D rigidbody2D;//刚体组件
+    void Start()//创建时执行一次(类似与构造函数)
+    {
+          rigidbody2D = GetComponent<Rigidbody2D>();
+          rigidbody2D.velocity = new Vector2(10,rigidbody2D.velocity.y);
+          animator = GetComponentInChildren<Animator>();
+    }
+
+    void Update()//每一帧都会变化
+    {
+          MoveFun();
+          CheckInput();
+          AnimatorController();
+          SleepFun();
+    }
+
+     void MoveFun(){
+          rigidbody2D.velocity = new Vector2(xInput * speed,rigidbody2D.velocity.y);
+     }
+     void CheckInput(){
+          xInput = Input.GetAxisRaw("Horizontal");//unity内置的输入 获取水平输入 -1 0 1
+          JumpFun();
+     }
+
+     void AnimatorController(){
+          isMoving = xInput != 0;
+          animator.SetBool("isMoving",isMoving);
+     }
+
+     void SleepFun(){
+          if(isMoving){
+               animator.SetBool("isSleeping",false);
+          }
+          else{
+               animator.SetBool("isSleeping",true);
+          }
+     }
+    void JumpFun(){
+     if(Input.GetKeyDown(KeyCode.W)){
+          rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x,jumpForce);
+     }
+    }
+}
+```
+## 人物镜像
+多读点代码 对你有益处
+```C#
+     private bool facingLeft = true;//默认朝向左边
+
+     private void Flip(){
+          facingLeft = !facingLeft;
+          transform.Rotate(0,180,0);//翻转当前的
+     }
+
+     private void FlipController(){ //这个方法塞进Update()方法中
+          if(rigidbody2D.velocity.x > 0 && facingLeft || rigidbody2D.velocity.x < 0 && !facingLeft){
+               //速度向右不朝向右 || 速度向左不朝向左
+               Flip();
+          }
+     }
+```

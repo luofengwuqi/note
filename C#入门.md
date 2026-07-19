@@ -33,6 +33,23 @@ public class move : MonoBehaviour
     }
 }
 ```
+## 跳跃限制(碰撞检测)
+```C#
+     [Header("碰撞检测")]
+     [SerializeField] private bool isGrounded;//根据这个布尔值调整jump()里面的代码
+     [SerializeField] private float groundCheckDistance; //当物体质点与地板的距离小于这个值 允许跳跃
+     [SerializeField] private LayerMask groundLayer; //需要在unity中指定那个是地板 看下面的图
+     private void OnDrawGizmos(){ 
+          //画一条线 看物体质点与地板的距离(图1)
+          Gizmos.DrawLine(transform.position,new Vector3(transform.position.x,transform.position.y - groundCheckDistance));
+     }
+     private void CollisionChecks(){//碰撞检测
+          isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, groundLayer); 
+     }
+```
+![](./assets/2026-7-19-1.jpg)
+![](/assets/2026-7-19-2.jpg)
+
 ## 打日志
 ```C#
 public string log = "hello world"
@@ -46,6 +63,7 @@ void Start(){
 
 如果想要用private 又允许在unity编辑器中查看 
 ```C#
+[Header("分组用的标签 用于在一堆属性显示时不乱")]
 [SerializeField] private float jumpForce;
 ```
 ## 刚体运动
@@ -171,6 +189,8 @@ public class Move : MonoBehaviour
     }
 }
 ```
+### 防止卡在第一帧
+![](./assets/2026-7-19-3.jpg)
 ## 人物镜像
 多读点代码 对你有益处
 ```C#

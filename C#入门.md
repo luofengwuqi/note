@@ -191,6 +191,8 @@ public class Move : MonoBehaviour
 ```
 ### 防止卡在第一帧
 ![](./assets/2026-7-19-3.jpg)
+### BlendTree
+![](./assets/2026-7-19-4.png)
 ## 人物镜像
 多读点代码 对你有益处
 ```C#

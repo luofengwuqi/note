@@ -210,3 +210,28 @@ public class Move : MonoBehaviour
           }
      }
 ```
+## Time与技能
+```C#
+     [Header("冲刺技能")]
+     [SerializeField] private float chongMax;//定值 技能持续时间
+     [SerializeField] private float chongTime;//记录技能剩余时间
+     [SerializeField] private float chongSpeed;//x轴速度
+
+     void chongController(){
+          chongTime -= Time.deltaTime;//每秒都减去
+          if(Input.GetKeyDown(KeyCode.LeftShift)){
+               chongTime = chongMax;//开始技能
+          }
+     }
+
+     void MoveFun(){
+          if(chongTime > 0){
+               Debug.Log("冲刺中");
+               xInput = xInput == 0 ? (facingLeft ? -1 : 1) : xInput;//防止人物因为没有xInput而冲刺失效
+               rigidbody2D.velocity = new Vector2(xInput * chongSpeed,0);//不下落的冲刺
+          }else{
+               chongTime = -1;
+               rigidbody2D.velocity = new Vector2(xInput * speed,rigidbody2D.velocity.y);
+          }
+     }
+```

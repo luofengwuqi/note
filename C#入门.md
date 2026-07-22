@@ -193,6 +193,9 @@ public class Move : MonoBehaviour
 ![](./assets/2026-7-19-3.jpg)
 ### BlendTree
 ![](./assets/2026-7-19-4.png)
+### 帧事件
+在指定的帧结束时 触发一个Function
+![](./assets/2026-7-22-1.png)
 ## 人物镜像
 多读点代码 对你有益处
 ```C#
@@ -235,3 +238,31 @@ public class Move : MonoBehaviour
           }
      }
 ```
+
+## C#的面向对象
+关键:  
+* virtual(允许重写)  
+* :(相当于extends)  
+* override(重写)
+* base(相当于super)
+
+父类
+```C#
+public class Base : MonoBehaviour
+{ 
+     public int health = 100;
+     public virtual void TakeDamage(int damage){ 
+          health -= damage;
+     }
+}
+```
+子类
+```C#
+public class Child : Base{
+     public override void TakeDamage(int damage){ 
+          health -= damage * 2;
+     }
+}
+```
+## 状态机
+规范的开发 之前的代码全都挤在一个脚本文件里面 这不好

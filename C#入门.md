@@ -50,6 +50,22 @@ public class move : MonoBehaviour
 ![](./assets/2026-7-19-1.jpg)
 ![](/assets/2026-7-19-2.jpg)
 
+### 更完善的用法
+有时候检查不一定要从角色中心向下检查地板存在  
+比如npc要检查行动路线前面有没有地板 如果没有就翻转了  
+这个时候需要一个子组件来完成
+```C#
+     [Header("碰撞检测")]
+     [SerializeField] private bool isGrounded;
+     [SerializeField] private Transform groundCheck;//指定一个子类 用来检测
+     [SerializeField] private float groundCheckDistance; 
+     [SerializeField] private LayerMask groundLayer;
+     private void CollisionChecks(){//碰撞检测
+          isGrounded = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer); 
+     }
+```
+![](./assets/2026-7-23.png)
+
 ## 打日志
 ```C#
 public string log = "hello world"

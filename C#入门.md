@@ -33,7 +33,8 @@ public class move : MonoBehaviour
     }
 }
 ```
-## 跳跃限制(碰撞检测)
+## 碰撞检测
+### 跳跃限制
 ```C#
      [Header("碰撞检测")]
      [SerializeField] private bool isGrounded;//根据这个布尔值调整jump()里面的代码
@@ -49,8 +50,7 @@ public class move : MonoBehaviour
 ```
 ![](./assets/2026-7-19-1.jpg)
 ![](/assets/2026-7-19-2.jpg)
-
-### 更完善的用法
+* 更完善的用法
 有时候检查不一定要从角色中心向下检查地板存在  
 比如npc要检查行动路线前面有没有地板 如果没有就翻转了  
 这个时候需要一个子组件来完成
@@ -65,6 +65,54 @@ public class move : MonoBehaviour
      }
 ```
 ![](./assets/2026-7-23.png)
+### npc的眼睛--使用RaycastHit2D
+原来是一个bool 现在是一个对象  
+1. 可以当做bool使用(是否进入探测范围)  
+2. 可以查进入探测范围后与探测对象的具体距离(isPlayerDetected.distance)
+```C#
+	[Header("与玩家的距离")]
+	[SerializeField] private float distanceToPlayer;
+	[SerializeField] private LayerMask whatIsPlayer;
+	[SerializeField] private RaycastHit2D isPlayerDetected;//注释点
+
+
+    [Header("敌人状态")]
+    [SerializeField] private bool isAttacking = false;
+    
+    [Header("移动相关数据")]
+    [SerializeField] private float highSpeed;//探测到玩家之后 加速 比原速度快
+
+     override protected void CollisionChecks()
+     {
+        base.CollisionChecks();
+        isPlayerDetected = Physics2D.Raycast(transform.position, Vector2.right *  direction, distanceToPlayer, whatIsPlayer);
+     }
+
+     private void Movement()
+     {
+          //略
+        //以下是运动状态代码
+
+        //探测到玩家 但是不够近->追赶
+        if (isPlayerDetected && isPlayerDetected.distance > 3f)
+        {
+            rb.velocity = new Vector2(highSpeed * direction  , rb.velocity.y);
+            isAttacking = false;
+            return;
+        }
+        //探测到玩家 且 玩家距离小于1->攻击
+        if(isPlayerDetected && isPlayerDetected.distance <= 3f)
+        {
+            isAttacking = true;
+            return;
+        }
+        //默认状态 没有攻击
+        //启动 自带速度
+        rb.velocity = new Vector2(-speed, rb.velocity.y);
+     }
+```
+
+
 
 ## 打日志
 ```C#

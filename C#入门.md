@@ -383,3 +383,112 @@ public class Child : Base{
 **PlayerIdelState.cs / PlayerMoveState.cs** (具体状态)
 - 继承 `PlayerState`，目前是空壳骨架
 - 后续在各自 `Update()` 中判断输入 → 调用 `StateMachine.Update(目标状态)` 实现切换
+
+### 完整代码
+
+**Player.cs**
+```csharp
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Player : MonoBehaviour
+{
+    public PlayerStateMachine stateMachine { get; private set;}
+    
+    public PlayerIdelState idleState { get; private set; }
+    
+    public PlayerMoveState moveState { get; private set; }
+
+    private void Awake()
+    {
+        stateMachine = new PlayerStateMachine();
+        idleState = new PlayerIdelState(this, stateMachine, "Idle");
+        moveState = new PlayerMoveState(this, stateMachine, "Moving");
+    }
+    private void Start()
+    {
+        stateMachine.Init(idleState);
+    } 
+    private void Update()
+    {
+        stateMachine.currentState.Update();
+    }
+}
+```
+
+**PlayerStateMachine.cs**
+```csharp
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerStateMachine
+{
+    public PlayerState currentState { get; private set;}
+
+    public void Init(PlayerState startState)
+    {
+        currentState = startState;
+        currentState.Enter();
+    }
+    public void Update(PlayerState newState)
+    {
+        currentState.Exit();
+        currentState = newState;
+        currentState.Enter();
+    }
+}
+```
+
+**PlayerState.cs**
+```csharp
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerState
+{
+    protected PlayerStateMachine StateMachine;
+    protected Player PlayerRef;
+    private readonly string _animBoolName;
+    
+    public PlayerState(Player player, PlayerStateMachine stateMachine, string animBoolName)
+    {
+        PlayerRef = player;
+        StateMachine = stateMachine;
+        this._animBoolName = animBoolName;
+    }
+
+    public virtual void Enter() { }
+    public virtual void Update() { }
+    public virtual void Exit() { } 
+}
+```
+
+**PlayerIdelState.cs**
+```csharp
+public class PlayerIdelState : PlayerState
+{
+    public PlayerIdelState(Player player, PlayerStateMachine stateMachine, string animBoolName) 
+        : base(player, stateMachine, animBoolName) { }
+
+    public override void Enter() { base.Enter(); }
+    public override void Update() { base.Update(); }
+    public override void Exit()  { base.Exit();  }
+}
+```
+
+**PlayerMoveState.cs**
+```csharp
+public class PlayerMoveState : PlayerState
+{
+    public PlayerMoveState(Player player, PlayerStateMachine stateMachine, string animBoolName) 
+        : base(player, stateMachine, animBoolName) { }
+
+    public override void Enter() { base.Enter(); }
+    public override void Update() { base.Update(); }
+    public override void Exit()  { base.Exit();  }
+}
+```

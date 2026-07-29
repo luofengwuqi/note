@@ -330,3 +330,56 @@ public class Child : Base{
 ```
 ## 状态机
 规范的开发 之前的代码全都挤在一个脚本文件里面 这不好
+ 状态模式 (State Pattern) 
+ ```
+┌─────────────────────────────────────────────────────┐
+│                    Player.cs                        │  ← 主角入口 MonoBehaviour
+│   ├── stateMachine (PlayerStateMachine)             │
+│   ├── idleState    (PlayerIdelState)                │
+│   └── moveState    (PlayerMoveState)                │
+└─────────────┬───────────────────────────────────────┘
+              │ 持有并驱动
+              ▼
+┌─────────────────────────────────────────────────────┐
+│              PlayerStateMachine.cs                  │  ← 状态机核心
+│   ├── currentState (当前活跃状态)                   │
+│   ├── Init()  → 初始化状态                          │
+│   └── Update() → 切换状态                           │
+└─────────────┬───────────────────────────────────────┘
+              │ 管理
+              ▼
+┌─────────────────────────────────────────────────────┐
+│                PlayerState.cs (抽象基类)            │  ← 状态的基类
+│   ├── Enter()   → 进入状态时调用                    │
+│   ├── Update()  → 每帧更新                          │
+│   └── Exit()    → 退出状态时调用                    │
+└─────────────┬───────────────────────────────────────┘
+              │ 继承
+     ┌────────┴────────┐
+     ▼                  ▼
+┌──────────────┐  ┌──────────────┐
+│PlayerIdelState│  │PlayerMoveState│  ← 具体状态
+│    (空闲)     │  │    (移动)     │
+└──────────────┘  └──────────────┘
+```
+
+> 这 5 个文件(`E:\code2\2DTest\My project\Assets\C#\`)的协作关系：
+
+**Player.cs** (入口)
+- `Awake()` → 创建 `stateMachine` + `idleState` + `moveState`
+- `Start()` → `stateMachine.Init(idleState)` 启动，默认空闲
+- `Update()` → `stateMachine.currentState.Update()` 每帧驱动当前状态
+
+**PlayerStateMachine.cs** (状态切换引擎)
+- `currentState` 记录当前状态
+- `Init()` → 设置初始状态并调用其 `Enter()`
+- `Update(新状态)` → 先 `Exit()` 旧状态 → 切换指针 → 再 `Enter()` 新状态
+
+**PlayerState.cs** (基类)
+- 三个 `virtual` 方法：`Enter()` / `Update()` / `Exit()`
+- 持有 `PlayerRef`(访问角色组件) 和 `StateMachine`(发起切换)
+- `_animBoolName` 存动画参数名，后续控制 `Animator.SetBool()`
+
+**PlayerIdelState.cs / PlayerMoveState.cs** (具体状态)
+- 继承 `PlayerState`，目前是空壳骨架
+- 后续在各自 `Update()` 中判断输入 → 调用 `StateMachine.Update(目标状态)` 实现切换

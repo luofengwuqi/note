@@ -396,10 +396,10 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public PlayerStateMachine stateMachine { get; private set;}
-    
     public PlayerIdelState idleState { get; private set; }
-    
     public PlayerMoveState moveState { get; private set; }
+
+     public Animator anim { get; private set; }
 
     private void Awake()
     {
@@ -409,7 +409,8 @@ public class Player : MonoBehaviour
     }
     private void Start()
     {
-        stateMachine.Init(idleState);
+          anim = GetComponentInChildren<Animator>();
+          stateMachine.Init(idleState);
     } 
     private void Update()
     {
@@ -450,20 +451,24 @@ using UnityEngine;
 
 public class PlayerState
 {
-    protected PlayerStateMachine StateMachine;
-    protected Player PlayerRef;
-    private readonly string _animBoolName;
+    protected PlayerStateMachine stateMachine;
+    protected Player player;
+    private readonly string animBoolName;
     
     public PlayerState(Player player, PlayerStateMachine stateMachine, string animBoolName)
     {
-        PlayerRef = player;
-        StateMachine = stateMachine;
-        this._animBoolName = animBoolName;
+        this.player = player;
+        this.stateMachine = stateMachine;
+        this.animBoolName = animBoolName;
     }
 
-    public virtual void Enter() { }
+    public virtual void Enter() { 
+          player.anim.SetBool(animBoolName,true);
+    }
     public virtual void Update() { }
-    public virtual void Exit() { } 
+    public virtual void Exit() { 
+          player.anim.SetBool(animBoolName,false);
+    } 
 }
 ```
 

@@ -1,3 +1,17 @@
+```
+Agent:执行主体
+Skill:能力说明
+Workflow:步骤编排
+Task:具体任务
+```
+
+```
+感知层
+认知层
+执行层
+记忆层
+治理层
+```
 # skills
 - 将一次有价值有标准化流程的思考整成一个可复用的东西  
 - 渐进式披露:按需加载  
@@ -41,6 +55,8 @@ C:\Users\你的用户名\.config\opencode\skills
 .opencode/skills/skill本体名字/skill本体
 
 # agent
+## openclaw
+全局代理 在学习  
 ## opencode
 ### 常用命令
 ```

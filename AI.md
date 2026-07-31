@@ -56,7 +56,45 @@ C:\Users\你的用户名\.config\opencode\skills
 
 # agent
 ## openclaw
-全局代理 在学习  
+全局代理 在学习
+### 文件结构
+根目录（自动注入，每次会话必读）
+| 文件 | 作用 | 类比 |
+| --- | --- | --- |
+| `SOUL.md` | 灵魂：我是谁、什么性格、怎么说话 | 性格设定 |
+| `USER.md` | 用户档案：用户是谁、学什么、在意什么 | 老板档案 |
+| `AGENTS.md` | 行为规则：怎么干活、记忆怎么记、群聊怎么发言、安全边界 | 员工手册 |
+| `TOOLS.md` | 工具笔记：本地工具的使用备忘（存档路径、编码坑等） | 操作手册 |
+| `IDENTITY.md` | 身份卡：名字、emoji、头像等元数据 | 工牌 |
+| `HEARTBEAT.md` | 值班表：定时检查要做的事（空着 = 不主动打扰） | 值班表 |
+### 常用命令
+#### CLI
+```bash
+openclaw-cn tui #打开openclaw 控制台 很多gui没有的命令 在这里可以执行 Terminal User Interface
+
+openclaw-cn agents add  #进入agent创建向导
+```
+#### TUI
+```
+# 日常
+/status 看当前 agent、会话、模型、token 用量
+
+/new  创建新会话 开新会话 = 翻新篇章，旧的上下文"存档"了（文件在，随时能读）
+      想找回旧内容：直接打开旧 JSONL 文件看，或者说"读一下存档"——帮你把内容捞回来
+
+/usage ( tokens | full | cost ) 显示每次回复的 token/费用
+
+
+# 切换
+agent <id>    │ 切换 agent（/agents 列出） 
+session <key> │ 切换会话（/sessions 列出）
+
+# 调试
+ /think off/low/high │ 控制思考级别          
+ /reasoning on/off   │ 显示/隐藏推理过程     
+ /verbose on/off     │ 显示/隐藏工具调用细节 
+ /context list       │ 看当前上下文里塞了啥  
+```
 ## opencode
 ### 常用命令
 ```
@@ -89,4 +127,14 @@ exit 退出
     //在这里写新的agent
   }
 }
+```
+# prompt
+## C-R-E-A-T-E框架
+```
+C-Context(背景设定)
+R-Requset(核心任务)
+E-Explanation(流程拆解)
+A-Action/Tools(工具约束)
+T-Tone(语气设定)
+E-Extra(边界)
 ```

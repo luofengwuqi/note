@@ -70,9 +70,9 @@ C:\Users\你的用户名\.config\opencode\skills
 ### 常用命令
 #### CLI
 ```bash
-openclaw-cn tui #打开openclaw 控制台 很多gui没有的命令 在这里可以执行 Terminal User Interface
+openclaw tui #打开openclaw 控制台 很多gui没有的命令 在这里可以执行 Terminal User Interface
 
-openclaw-cn agents add  #进入agent创建向导
+openclaw agents add  #进入agent创建向导
 ```
 #### TUI
 ```

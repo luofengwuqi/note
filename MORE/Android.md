@@ -41,3 +41,7 @@ Android SDK（ADB和Fastboot电脑端工具）：https://developer.android.googl
 <small>例如HONOR是关机后长按音量-</small> 
 
 (因为HORNOR 9X走不通 暂时放弃)
+
+# 安卓->Linux
+Termux(手机端) + MobaXterm
+https://www.bilibili.com/video/BV16u4y1M7yG/?spm_id_from=333.337.search-card.all.click&vd_source=dc6ca277dcaf6155b5329334561a1f4a

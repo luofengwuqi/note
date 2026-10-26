@@ -36,7 +36,39 @@ P-MOS始终断开
 复用:
 
 ### IO最大输出速度
-      
+低速:2MHZ  
+中速:10MHZ  
+高速:50MHZ  
+选取满足要求的最小值(速度越高 耗电增加 EMI问题) 
+
+### 亮灯实验
+```C
+#include "stm32f10x.h"
+#include "delay.h"
+//这个程序用于做在引脚PC13的板LED灯亮灯测试
+int main(void)
+{
+	//1. 启用GPIOC用时钟
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC,ENABLE);
+	//2. 初始化IO引脚:
+	GPIO_InitTypeDef obj = { 0 };
+	
+	obj.GPIO_Pin = GPIO_Pin_13;//13号引脚
+	obj.GPIO_Mode = GPIO_Mode_Out_PP;//通用输出推挽
+	obj.GPIO_Speed = GPIO_Speed_2MHz;//IO最大输出速度 低速:2MHZ 
+	
+	
+	GPIO_Init(GPIOC,&obj);
+	//3. 向输出数据寄存器写一bit
+	while(1)
+	{
+		GPIO_WriteBit(GPIOC,GPIO_Pin_13,Bit_RESET);//输出低电平(0),LED点亮
+		Delay(500);
+		GPIO_WriteBit(GPIOC,GPIO_Pin_13,Bit_SET);//输出高电平(1),LED灭
+		Delay(500);
+	}
+}
+```
 
 ## 输入   
 **输入上拉**  

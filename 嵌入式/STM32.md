@@ -3,7 +3,7 @@
 找芯片上面圆圈 最近的 逆时针转 1
 ## 特殊引脚  
 **VDD** 供电 接3.3V  
-**VSS** 接地0V  
+**VSS** **GDN** 接地0V  
 **NRST** 复位(接复位引脚)  
 **VBAT** 备用电源(纽扣电池)  
 **BOOT0** 启用模式选择  
@@ -19,7 +19,7 @@
 **通用输出开漏**  
 **复用输出推挽**  
 **复用输出开漏**  
-
+![](./assets/2026102802.png)
 #### 推挽/开漏
 **推挽**  
 MOS管交替导通输入  
@@ -69,9 +69,42 @@ int main(void)
 	}
 }
 ```
-
 ## 输入   
 **输入上拉**  
 **输入下拉**  
 **输入浮空**  
-**模拟模式**  
+**模拟模式**
+![](./assets/2026102801.png)  
+```
+#include "stm32f10x.h"
+#include "delay.h"
+//这个程序用于做按钮控制LED开关的实验
+int main(void)
+{
+	//1. 启用GPIOA用时钟
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);
+	//2. 初始化IO引脚:
+	GPIO_InitTypeDef obj = { 0 };
+	//2.1 pinA0引脚
+	obj.GPIO_Pin = GPIO_Pin_0;//0号引脚
+	obj.GPIO_Mode = GPIO_Mode_Out_PP;//通用输出推挽
+	obj.GPIO_Speed = GPIO_Speed_2MHz;//IO最大输出速度 低速:2MHZ 
+	GPIO_Init(GPIOA,&obj);
+	//2.2 pinA1引脚
+	obj.GPIO_Pin = GPIO_Pin_1;//1号引脚
+	obj.GPIO_Mode = GPIO_Mode_IPU;//输入上拉
+	GPIO_Init(GPIOA,&obj);
+	//3. 
+	while(1)
+	{
+		if(GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_1) == Bit_RESET){
+			//按钮按下
+			GPIO_WriteBit(GPIOA,GPIO_Pin_0,Bit_SET);
+		} else {
+			//按钮松开
+			GPIO_WriteBit(GPIOA,GPIO_Pin_0,Bit_RESET);
+		}
+	}
+}
+
+```

@@ -2,7 +2,7 @@
 ## 引脚编号
 找芯片上面圆圈 最近的 逆时针转 1
 ## 特殊引脚  
-**VDD** 供电 接3.3V  
+**VDD** **3.3** 供电 接3.3V  
 **VSS** **GND** 接地0V  
 **NRST** 复位(接复位引脚)  
 **VBAT** 备用电源(纽扣电池)  
@@ -15,8 +15,8 @@
 共八种 每一个引脚可以选择其中之一  
 ## 输出  
 ### 类型
-**通用输出推挽**  
-**通用输出开漏**  
+**通用输出推挽**:GPIO_Mode_Out_PP  
+**通用输出开漏**:GPIO_Mode_Out_PP  
 **复用输出推挽**  
 **复用输出开漏**  
 ![](./assets/2026102802.png)
@@ -57,7 +57,6 @@ int main(void)
 	obj.GPIO_Mode = GPIO_Mode_Out_PP;//通用输出推挽
 	obj.GPIO_Speed = GPIO_Speed_2MHz;//IO最大输出速度 低速:2MHZ 
 	
-	
 	GPIO_Init(GPIOC,&obj);
 	//3. 向输出数据寄存器写一bit
 	while(1)
@@ -68,6 +67,11 @@ int main(void)
 		Delay(500);
 	}
 }
+```
+```C
+//如果想一次性初始化多个类似功能的引脚 可以:
+obj.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1;
+obj.GPIO_Pin = GPIO_Pin_All;
 ```
 ## 输入   
 **输入上拉**  
